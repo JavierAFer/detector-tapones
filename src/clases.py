@@ -34,3 +34,35 @@ class GestorImagenes:
         return copias
     
 
+class GestorMascaras:
+    def __init__(self, imagen):
+        self.imagen = imagen
+        self.imagen_hsv = cv2.cvtColor(imagen, cv2.COLOR_BGR2HSV)
+
+        # Definición de los límites de los colores en HSV
+        self.colores = {
+            "negro": ([90, 30, 10], [130, 120, 80]),
+            "blanco": ([96, 15, 170], [145, 35, 250]),
+            "azul claro": ([102, 95, 145], [108, 165, 220]),
+            "azul": ([113, 170, 70], [120, 240, 150]),
+            "rojo1": ([0, 130, 80], [30, 235, 190]),  # Parte 1 de rojo
+            "rojo_2": ([178, 130, 80], [180, 240, 210]),  # Parte 2 de rojo
+            "rosa fuerte": ([170, 130, 80], [177, 240, 210]),
+            "rosa claro": ([140, 7, 140], [175, 60, 230])
+        }
+
+    def crear_mascara(self, color):
+        """Crea una máscara para un color específico"""
+        if color == "rojo":
+            # Caso especial del azul, ya que tiene dos rangos
+            lower1, upper1 = self.colores["rojo1"]
+            lower2, upper2 = self.colores["rojo_2"]
+            mask1 = cv2.inRange(self.imagen_hsv, np.array(lower1), np.array(upper1))
+            mask2 = cv2.inRange(self.imagen_hsv, np.array(lower2), np.array(upper2))
+            return cv2.add(mask1, mask2)
+        elif color in self.colores:
+            lower, upper = self.colores[color]
+            return cv2.inRange(self.imagen_hsv, np.array(lower), np.array(upper))
+        else:
+            print(f"Color {color} no reconocido.")
+            return None
