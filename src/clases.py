@@ -94,3 +94,12 @@ def dibujar_contornos(self, mascara_combinada, min_area=8000, max_area=20000000)
         plt.show()
 
         return cnts_filtrados
+
+def filtrar_contornos_por_area(self, contornos, min_area, max_area):
+        """Filtra los contornos por tamaño de área"""
+        contornos_filtrados = []
+        for contorno in contornos:
+            area = cv2.contourArea(contorno)
+            if min_area < area < max_area:
+                contornos_filtrados.append(contorno)
+        return contornos_filtrados
