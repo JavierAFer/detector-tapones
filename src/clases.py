@@ -67,39 +67,39 @@ class GestorMascaras:
             print(f"Color {color} no reconocido.")
             return None
 
-def combinar_mascaras(self, colores):
-        """Combina varias máscaras de colores seleccionados"""
-        mascara_combinada = np.zeros(self.imagen_hsv.shape[:2], dtype="uint8")
-        for color in colores:
-            mascara = self.crear_mascara(color)
-            if mascara is not None:
-                mascara_combinada = cv2.add(mascara_combinada, mascara)
-        return mascara_combinada
+    def combinar_mascaras(self, colores):
+            """Combina varias máscaras de colores seleccionados"""
+            mascara_combinada = np.zeros(self.imagen_hsv.shape[:2], dtype="uint8")
+            for color in colores:
+                mascara = self.crear_mascara(color)
+                if mascara is not None:
+                    mascara_combinada = cv2.add(mascara_combinada, mascara)
+            return mascara_combinada
 
-def dibujar_contornos(self, mascara_combinada, min_area=8000, max_area=20000000):
-        """Dibuja los contornos de la máscara combinada en la imagen original, filtrando por área"""
-        copia_imagen = self.imagen.copy()
-        cnts = cv2.findContours(mascara_combinada.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
+    def dibujar_contornos(self, mascara_combinada, min_area=8000, max_area=20000000):
+            """Dibuja los contornos de la máscara combinada en la imagen original, filtrando por área"""
+            copia_imagen = self.imagen.copy()
+            cnts = cv2.findContours(mascara_combinada.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            cnts = imutils.grab_contours(cnts)
 
-        cnts_filtrados = self.filtrar_contornos_por_area(cnts, min_area, max_area)
+            cnts_filtrados = self.filtrar_contornos_por_area(cnts, min_area, max_area)
 
-        cv2.drawContours(copia_imagen, cnts_filtrados, -1, (0, 255, 0), 20)
-        
-        # Mostrar imagen con contornos
-        plt.figure(figsize=(10, 10))
-        plt.imshow(cv2.cvtColor(copia_imagen, cv2.COLOR_BGR2RGB))
-        plt.title('Imagen con contornos filtrados')
-        plt.axis('off')
-        plt.show()
+            cv2.drawContours(copia_imagen, cnts_filtrados, -1, (0, 255, 0), 20)
+            
+            # Mostrar imagen con contornos
+            plt.figure(figsize=(10, 10))
+            plt.imshow(cv2.cvtColor(copia_imagen, cv2.COLOR_BGR2RGB))
+            plt.title('Imagen con contornos filtrados')
+            plt.axis('off')
+            plt.show()
 
-        return cnts_filtrados
+            return cnts_filtrados
 
-def filtrar_contornos_por_area(self, contornos, min_area, max_area):
-        """Filtra los contornos por tamaño de área"""
-        contornos_filtrados = []
-        for contorno in contornos:
-            area = cv2.contourArea(contorno)
-            if min_area < area < max_area:
-                contornos_filtrados.append(contorno)
-        return contornos_filtrados
+    def filtrar_contornos_por_area(self, contornos, min_area, max_area):
+            """Filtra los contornos por tamaño de área"""
+            contornos_filtrados = []
+            for contorno in contornos:
+                area = cv2.contourArea(contorno)
+                if min_area < area < max_area:
+                    contornos_filtrados.append(contorno)
+            return contornos_filtrados
