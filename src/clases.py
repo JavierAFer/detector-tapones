@@ -66,3 +66,12 @@ class GestorMascaras:
         else:
             print(f"Color {color} no reconocido.")
             return None
+
+def combinar_mascaras(self, colores):
+        """Combina varias máscaras de colores seleccionados"""
+        mascara_combinada = np.zeros(self.imagen_hsv.shape[:2], dtype="uint8")
+        for color in colores:
+            mascara = self.crear_mascara(color)
+            if mascara is not None:
+                mascara_combinada = cv2.add(mascara_combinada, mascara)
+        return mascara_combinada
